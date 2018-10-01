@@ -1,0 +1,30 @@
+version: '2'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    build: ./kafka-build/
+    ports:
+      - "9092:9092"
+    links:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_CREATE_TOPICS: "test:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./kafka-data:/var/lib/kafka
+  redis:
+    image: redis:4.0.11-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis:/data
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 800000
+        hard: 900000

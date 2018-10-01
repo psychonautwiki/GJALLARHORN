@@ -1,0 +1,45 @@
+digraph GJALLARHORN {
+    rankdir=TD;
+
+    subgraph asgard {
+        node [style=filled,color=cornsilk];
+
+        asgard -> reddit;
+        reddit -> asgard;
+
+        asgard -> redis;
+        redis -> asgard;
+
+        label = "HHVM";
+        color=blue
+    }
+
+    subgraph ragnarok {
+        node [style=filled,color=lightblue];
+
+        kafka;
+
+        label = "Caching";
+    }
+
+    subgraph ragnarok {
+        node [style=filled,color=lightblue];
+
+        niflheim;
+
+        label = "Caching";
+    }
+
+    asgard -> kafka;
+
+    kafka -> niflheim;
+
+    niflheim -> redis;
+    redis -> niflheim;
+
+    reddit [shape=diamond];
+    redis [shape=box];
+    asgard [shape=box];
+    niflheim [shape=box];
+    kafka [shape=box];
+}
