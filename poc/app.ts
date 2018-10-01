@@ -23,13 +23,16 @@ const getJSON = async url => {
     }
 }
 
-const redisClient = bluebird.promisifyAll(redis.createClient()) as any;
+const redisClient = bluebird.promisifyAll(redis.createClient({
+    host: process.env.REDIS_HOST,
+    password: process.env.REDIS_PASS
+})) as any;
 
 const wait = ms => new Promise(res =>
     setTimeout(res, ms)
 );
 
-const __KAFKA_CHANNEL__ = 'redis-test-1';
+const __KAFKA_TOPIC__ = process.env.KAFKA_TOPIC;
 
 let lastCommit = 0;
 let totalCommitted = 0;
@@ -46,26 +49,15 @@ setInterval(() => {
 
 (async () => {
     const client = new kafka.KafkaClient({
-        kafkaHost: '127.0.0.1:9092'
-        // kafkaHost: '35.204.177.64:9092'
+        kafkaHost: process.env.KAFKA_HOST + ':9092'
     });
 
     client.on('ready', async () => {
         const producer = new kafka.Producer(client);
 
-        // const consumer = new kafka.Consumer(client, [{
-        //     topic: __KAFKA_CHANNEL__
-        // }], {});
-    
-        // consumer.on('message', msg => {
-        //     console.log(msg.topic, msg.value);
-        // });
-
         while(true) {
             // const data = _.get(await getJSON('https://www.reddit.com/r/all.json?limit=120&' + Math.random()), 'data.children');
             const data = _.get(await getJSON('https://www.reddit.com/r/all/comments/.json?limit=100&' + Math.random()), 'data.children');
-    
-            // parseInt(entry_data.id, 36),
 
             Promise.all(
                 data.map(async item => {
@@ -76,7 +68,7 @@ setInterval(() => {
                     await redisClient.setAsync( item.data.name, 1, 'EX', 86400 );
 
                     producer.send([{
-                        topic: __KAFKA_CHANNEL__,
+                        topic: __KAFKA_TOPIC__,
                         messages: [
                             JSON.stringify(item)
                         ]
