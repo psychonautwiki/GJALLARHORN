@@ -1,45 +1,75 @@
-digraph GJALLARHORN {
-    rankdir=TD;
+digraph G {
+    rankdir="LR";
+    fontname="sans-serif";
+    penwidth="0.1";
+    edge [comment="Wildcard edge", 
+          fontname="sans-serif", 
+          fontsize=10, 
+          colorscheme="blues3", 
+          color=2, 
+          fontcolor=3];
+    node [fontname="serif", 
+          fontsize=13, 
+          fillcolor="1", 
+          colorscheme="ylorrd8", 
+          color="2", 
+          fontcolor="4", 
+          style="filled"];
+    subgraph "cluster_sattelites" {
+        edge [comment="sattelites"];
+        node [comment="sattelites"];
+        "asgard-sat-1" -> "reddit";
+        "asgard-sat-2" -> "reddit";
+        "asgard-sat-3" -> "reddit";
+        subgraph "cluster_sats" {
+            edge [comment="sats"];
+            node [comment="sats"];
+            "asgard-sat-1";
+            "asgard-sat-2";
+            "asgard-sat-3";
+        }
 
-    subgraph asgard {
-        node [style=filled,color=cornsilk];
+        subgraph "cluster_redis" {
+            edge [comment="hermes"];
+            node [comment="hermes"];
+            "redis";
+            "redis" -> "asgard-sat-1";
+            "redis" -> "asgard-sat-2";
+            "redis" -> "asgard-sat-3";
+            "asgard-sat-1" -> "redis";
+            "asgard-sat-2" -> "redis";
+            "asgard-sat-3" -> "redis";
+        }
 
-        asgard -> reddit;
-        reddit -> asgard;
-
-        asgard -> redis;
-        redis -> asgard;
-
-        label = "HHVM";
-        color=blue
     }
 
-    subgraph ragnarok {
-        node [style=filled,color=lightblue];
-
-        kafka;
-
-        label = "Caching";
+    subgraph "cluster_hermes" {
+        edge [comment="hermes"];
+        node [comment="hermes"];
+        "kafka";
+        "zookeeper";
+        "kafka" -> "zookeeper";
+        "zookeeper" -> "kafka";
+        "gjallarhorn" -> "kafka";
+        "kafka" -> "gjallarhorn";
+        "asgard-sat-1" -> "kafka";
+        "asgard-sat-2" -> "kafka";
+        "asgard-sat-3" -> "kafka";
+        "redis";
+        "redis" -> "asgard-sat-1";
+        "redis" -> "asgard-sat-2";
+        "redis" -> "asgard-sat-3";
+        "asgard-sat-1" -> "redis";
+        "asgard-sat-2" -> "redis";
+        "asgard-sat-3" -> "redis";
     }
 
-    subgraph ragnarok {
-        node [style=filled,color=lightblue];
-
-        niflheim;
-
-        label = "Caching";
+    subgraph "cluster_telegram" {
+        edge [comment="telegram"];
+        node [comment="telegram"];
+        "telegram";
+        "gjallarhorn" -> "telegram";
     }
 
-    asgard -> kafka;
-
-    kafka -> niflheim;
-
-    niflheim -> redis;
-    redis -> niflheim;
-
-    reddit [shape=diamond];
-    redis [shape=box];
-    asgard [shape=box];
-    niflheim [shape=box];
-    kafka [shape=box];
 }
+
