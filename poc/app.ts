@@ -61,11 +61,11 @@ setInterval(() => {
 
             Promise.all(
                 data.map(async item => {
+                    await redisClient.setAsync( item.data.name, 1, 'EX', 86400 );
+
                     if ( await redisClient.getAsync( item.data.name ) !== null ) {
                         return;
                     }
-
-                    await redisClient.setAsync( item.data.name, 1, 'EX', 86400 );
 
                     producer.send([{
                         topic: __KAFKA_TOPIC__,
