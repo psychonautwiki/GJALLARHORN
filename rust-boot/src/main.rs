@@ -145,11 +145,20 @@ fn main() {
 
     let kafka_fetch_max_bytes_per_partition = 0x1ffffei32;
 
+    let desired_fallback_offset = match std::env::var("KAFKA_OFFSET") {
+        Ok(offset) => match offset.as_str() {
+            "latest" => FetchOffset::Latest,
+            "earliest" => FetchOffset::Earliest,
+            _ => panic!("OFFSET can either be latest, earliest, or unset."),
+        },
+        Err(_) => FetchOffset::Latest
+    };
+
     let mut consumer =
             Consumer::from_hosts(kafka_hosts)
             .with_topic(kafka_topic_name.to_string())
             // .with_fallback_offset(FetchOffset::Earliest)
-            .with_fallback_offset(FetchOffset::Latest)
+            .with_fallback_offset(desired_fallback_offset)
             .with_group(kafka_consumer_group)
             .with_offset_storage(GroupOffsetStorage::Kafka)
             .with_fetch_max_bytes_per_partition(kafka_fetch_max_bytes_per_partition)
