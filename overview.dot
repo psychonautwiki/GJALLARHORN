@@ -1,5 +1,4 @@
 digraph G {
-    rankdir="LR";
     fontname="sans-serif";
     penwidth="0.1";
     edge [comment="Wildcard edge", 
@@ -18,6 +17,7 @@ digraph G {
     subgraph "cluster_sattelites" {
         edge [comment="sattelites"];
         node [comment="sattelites"];
+        "reddit" [shape="component"];
         "asgard-sat-1" -> "reddit";
         "asgard-sat-2" -> "reddit";
         "asgard-sat-3" -> "reddit";
@@ -32,7 +32,7 @@ digraph G {
         subgraph "cluster_redis" {
             edge [comment="hermes"];
             node [comment="hermes"];
-            "redis";
+            "redis" [shape="Mcircle"];
             "redis" -> "asgard-sat-1";
             "redis" -> "asgard-sat-2";
             "redis" -> "asgard-sat-3";
@@ -46,7 +46,7 @@ digraph G {
     subgraph "cluster_hermes" {
         edge [comment="hermes"];
         node [comment="hermes"];
-        "kafka";
+        "kafka" [shape="Mcircle"];
         "zookeeper";
         "kafka" -> "zookeeper";
         "zookeeper" -> "kafka";
@@ -55,7 +55,6 @@ digraph G {
         "asgard-sat-1" -> "kafka";
         "asgard-sat-2" -> "kafka";
         "asgard-sat-3" -> "kafka";
-        "redis";
         "redis" -> "asgard-sat-1";
         "redis" -> "asgard-sat-2";
         "redis" -> "asgard-sat-3";
@@ -72,4 +71,3 @@ digraph G {
     }
 
 }
-

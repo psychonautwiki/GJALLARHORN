@@ -2,7 +2,7 @@
 
 <h5 align="center">The blast of Gjallarhorn will be heard throughout all the cosmos.</h5>
 
-<img src="https://github.com/psychonautwiki/GJALLARHORN/raw/master/overview.png" width="350"/>
+<img src="https://github.com/psychonautwiki/GJALLARHORN/raw/master/overview.png"/>
 
 The Psychonaut License (PSYLICv1)
 
