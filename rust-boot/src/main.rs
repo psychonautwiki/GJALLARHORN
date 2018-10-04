@@ -124,7 +124,7 @@ impl ConfiguredApi {
             .disable_preview()
         );
 
-        self.core.run(future);
+        let _ = self.core.run(future);
     }
 }
 
@@ -148,8 +148,8 @@ fn main() {
     let mut consumer =
             Consumer::from_hosts(kafka_hosts)
             .with_topic(kafka_topic_name.to_string())
-            .with_fallback_offset(FetchOffset::Earliest)
-            // .with_fallback_offset(FetchOffset::Latest)
+            // .with_fallback_offset(FetchOffset::Earliest)
+            .with_fallback_offset(FetchOffset::Latest)
             .with_group(kafka_consumer_group)
             .with_offset_storage(GroupOffsetStorage::Kafka)
             .with_fetch_max_bytes_per_partition(kafka_fetch_max_bytes_per_partition)
@@ -161,6 +161,7 @@ fn main() {
     let matchers = [
         regex::Regex::new(r"(?i)psychonaut\s?wiki").unwrap(),
         regex::Regex::new(r"(?i)psychonaut.?wiki").unwrap(),
+        regex::Regex::new(r"(?i)legalizepsychedelics(.?com)").unwrap(),
         regex::Regex::new(r"(?i)disregard\s?everything\s?i\s?say").unwrap()
     ];
 
@@ -236,7 +237,7 @@ r#"<a href="{}">{}</a> commented in <a href="{}">/r/{}</a> on a post by <a href=
                     _ => {}
                 };
 
-                // print!("{}\r\x1b[0J\x1b[1G\x1b[1;1H", i);
+                print!("{}\r\x1b[0J", i);
             }
         }
     }
